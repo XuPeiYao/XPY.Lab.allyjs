@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <title>Ally.js Test</title>
+</head>
+
+<body>
+    <button onclick="openDialog()">OPEN DIALOG</button>
+    <button>A Button</button>
+    <button>B Button</button>
+    <button>C Button</button>
+    <dialog id="mainDialog" role="dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description"
+        aria-modal="true">
+        <h2 id="dialog-title" style="margin-top:0">Dialog Title</h2>
+        <div id="dialog-description">Dialog message.</div>
+        <div>
+            <button onclick="closeDialog()">YES</button>
+            <button onclick="closeDialog()">NO</button>
+        </div>
+    </dialog>
+    <script src="assets/js/ally.min.js"></script>
+    <script>
+        var disabledHandle, tabHandle, dialogSourceEle, keyHandle;
+        function openDialog() {
+            dialogSourceEle = document.activeElement;
+            mainDialog.open = true;
+            disabledHandle = ally.maintain.disabled({
+                filter: '#mainDialog'
+            });
+            tabHandle = ally.maintain.tabFocus({
+                context: '#mainDialog',
+            });
+            keyHandle = ally.when.key({
+                escape: closeDialog,
+            });
+
+            ally.query.firstTabbable({
+                context: '#mainDialog',
+                defaultToContext: true,
+            }).focus();
+        }
+
+        function closeDialog() {
+            disabledHandle.disengage();
+            tabHandle.disengage();
+            keyHandle.disengage();
+            mainDialog.open = false;
+            dialogSourceEle.focus();
+        }
+    </script>
+</body>
+
+</html>
